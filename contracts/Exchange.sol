@@ -1,9 +1,8 @@
 pragma solidity ^0.4.0;
 
-import "./owned.sol";
-import "./ERC20Standard.sol";
+import "./FixedSupplyToken.sol";
 
-contract Exchange is owned {
+contract Exchange is Owned {
     
     struct Offer {
         uint amount;
@@ -53,39 +52,39 @@ contract Exchange is owned {
     
     //Withdraw/deposit Ether//
     
-    function depositEther() payable{
+    // function depositEther() payable public{
         
-    }
+    // }
     
-    function withdrawEther(uint amountInWei){
+    // function withdrawEther(uint amountInWei) public {
         
-    }
+    // }
     
-    function getEthBalanceInWei() constant returns (uint) {
+    // function getEthBalanceInWei() constant returns (uint){
         
-    }
+    // }
     
     //Token Management//
     
-    function addToken(string symbolName, address erc20TokenAddress){
+    function addToken(string symbolName, address erc20TokenAddress) public {
         require(!hasToken(symbolName));
         symbolNameIndex++;
         tokens[symbolNameIndex].symbolName = symbolName;
         tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
     }
     
-    function hasToken(string symbolName) constant returns (bool) {
+    function hasToken(string symbolName) public constant returns (bool)  {
         uint8 index = getSymbolIndexName(symbolName);
-        if(index == 0){
+        if (index == 0) {
             return false;
         }
         return true;
         
     }
     
-    function getSymbolIndexName(string symbolName) internal returns (uint8) {
-        for(uint8 i = 1; i <= symbolNameIndex; i++ ){
-            if(stringsEqual(tokens[i].symbolName, symbolName)){
+    function getSymbolIndexName(string symbolName) view internal returns (uint8) {
+        for (uint8 i = 1; i <= symbolNameIndex; i++ ) {
+            if (stringsEqual(tokens[i].symbolName, symbolName)) {
                 return i;
             }
         }
@@ -94,44 +93,44 @@ contract Exchange is owned {
     
     //imported String comparison function//
     
-    function stringsEqual(string storage _a, string memory _b) internal returns(bool){
+    function stringsEqual(string storage _a, string memory _b) view internal returns(bool) {
         bytes storage a = bytes(_a);
         bytes memory b = bytes(_b);
-        if(a.length != b.length)
+        if (a.length != b.length)
             return false;
             
-        for(uint i = 0; i < a.length; i++)
-            if(a[i] != b[i])
+        for (uint i = 0; i < a.length; i++)
+            if (a[i] != b[i])
                 return false;
         return true;       
     }
     
     //get order books//
     
-    function getBuyOrderBook(string symbolName) constant returns (uint[], uint[]) {
+    // function getBuyOrderBook(string symbolName) constant returns (uint[], uint[]) {
         
-    }
+    // }
     
-    function getSellOrderBook(string symbolName) constant returns (uint[], uint[]){
+    // function getSellOrderBook(string symbolName) constant returns (uint[], uint[]){
         
-    }
+    // }
     
-    //Bid order//
+    // //Bid order//
     
-    function buyToken(string symbolName, uint priceInWei, uint amount){
+    // function buyToken(string symbolName, uint priceInWei, uint amount){
         
-    }
+    // }
     
-    //Ask Order//
+    // //Ask Order//
     
-    function sellToken(string symbolName, uint priceInWei, uint amount){
+    // function sellToken(string symbolName, uint priceInWei, uint amount){
         
-    }
+    // }
     
-    //Cancel Order//
+    // //Cancel Order//
     
-    function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey){
+    // function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey){
         
-    }
+    // }
     
 }
