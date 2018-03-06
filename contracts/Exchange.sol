@@ -52,17 +52,22 @@ contract Exchange is Owned {
     
     //Withdraw/deposit Ether//
     
-    // function depositEther() payable public{
-        
-    // }
+    function depositEther() payable public {
+        require(balanceEthForAddresses[msg.sender] + msg.value >= balanceEthForAddresses[msg.sender]);
+        balanceEthForAddresses[msg.sender] += msg.value;
+    }
     
-    // function withdrawEther(uint amountInWei) public {
+    function withdrawEther(uint amountInWei) public {
+        require(balanceEthForAddresses[msg.sender] - amountInWei >= 0);
+        require(balanceEthForAddresses[msg.sender] - amountInWei <= balanceEthForAddresses[msg.sender]);
+        balanceEthForAddresses[msg.sender] -= amountInWei;
+        msg.sender.transfer(amountInWei);
         
-    // }
+    }
     
-    // function getEthBalanceInWei() constant returns (uint){
-        
-    // }
+    function getEthBalanceInWei() public constant returns (uint) {
+        return balanceEthForAddresses[msg.sender];
+    }
     
     //Token Management//
     
@@ -73,8 +78,8 @@ contract Exchange is Owned {
         tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
     }
     
-    function hasToken(string symbolName) public constant returns (bool)  {
-        uint8 index = getSymbolIndexName(symbolName);
+    function hasToken(string symbolName) public constant returns (bool) {
+        uint8 index = getSymbolIndex(symbolName);
         if (index == 0) {
             return false;
         }
@@ -82,13 +87,19 @@ contract Exchange is Owned {
         
     }
     
-    function getSymbolIndexName(string symbolName) view internal returns (uint8) {
+    function getSymbolIndex(string symbolName) view internal returns (uint8) {
         for (uint8 i = 1; i <= symbolNameIndex; i++ ) {
             if (stringsEqual(tokens[i].symbolName, symbolName)) {
                 return i;
             }
         }
         return 0;
+    }
+
+    function getSymbolIndexOrThrow(string symbolName) view internal returns (uint8) {
+        uint8 index = getSymbolIndex(symbolName);
+        require(index >= 0);
+        return index;
     }
     
     //imported String comparison function//
@@ -103,6 +114,32 @@ contract Exchange is Owned {
             if (a[i] != b[i])
                 return false;
         return true;       
+    }
+
+    //Deposit tokens//
+    function depositToken (string symbolName, uint amount) public {
+        uint8 index = getSymbolIndexOrThrow(symbolName);
+        require(tokens[index].tokenContract != address(0));
+        ERC20Interface token = ERC20Interface(tokens[index].tokenContract);
+        require(token.transferFrom(msg.sender, address(this), amount) == true);
+        require(tokenBalanceForAddress[msg.sender][index] + amount >= tokenBalanceForAddress[msg.sender][index]);
+        tokenBalanceForAddress[msg.sender][index] += amount;
+
+    }
+
+    function withdrawToken (string symbolName, uint amount) public {
+        uint8 index = getSymbolIndexOrThrow(symbolName);
+        require(tokens[index].tokenContract != address(0));
+        ERC20Interface token = ERC20Interface(tokens[index].tokenContract);
+        require(token.transferFrom(msg.sender, address(this), amount) == true);
+        require(tokenBalanceForAddress[msg.sender][index] - amount <= tokenBalanceForAddress[msg.sender][index]);
+        tokenBalanceForAddress[msg.sender][index] -= amount;
+        require(token.transfer(msg.sender, amount) == true);
+    }
+
+    function getBalance (string symbolName) public constant returns (uint){
+        uint8 index = getSymbolIndexOrThrow(symbolName);
+        return tokenBalanceForAddress[msg.sender][index];
     }
     
     //get order books//

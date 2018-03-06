@@ -1,6 +1,8 @@
 const fixedSupplyToken = artifacts.require("./FixedSupplyToken.sol");
+const exchangeContract = artifacts.require("./Exchange.sol");
 const assert = require("assert");
-contract("FixedSupplyToken", async function(accounts) {
+
+contract("FixedSupplyToken", function(accounts) {
   it("first account should own all tokens", () => {
     var totalSupplyToken;
     var myTokenInstance;
@@ -48,5 +50,23 @@ contract("FixedSupplyToken", async function(accounts) {
       account2Start.toNumber() + 10,
       "Amount was not recieved correctly by reciver"
     );
+  });
+  it("Exchange should be able to add tokens", async () => {
+    var token = await fixedSupplyToken.deployed();
+    var exchange = await exchangeContract.deployed();
+    await exchange.addToken("FIX", token.address);
+    var hasToken = await exchange.hasToken.call("FIX");
+    var nonExistantToken = await exchange.hasToken.call("NoneExistant");
+    assert.equal(hasToken, true, "The token was not added");
+    assert.equal(nonExistantToken, false, "None exisitant token exists");
+  });
+  it("Exchange should be able to deposit tokens", async () => {
+    var token = await fixedSupplyToken.deployed();
+    var exchange = await exchangeContract.deployed();
+    await token.approve(exchange.address, 2000);
+    await exchange.addToken("FIXED", token.address)
+    await exchange.depositToken("FIXED", 2000);
+    var balance = await exchange.getBalance("FIXED");
+    assert.equal(balance, 2000, "Should deposit 2000 tokens into address");
   });
 });
