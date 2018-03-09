@@ -16,7 +16,7 @@ import token_artifact from '../../build/contracts/FixedSupplyToken.json';
 var ExchangeContract = contract(exchange_artifact);
 var TokenContract = contract(token_artifact);
 
-var tokenName = "DAJ";
+var tokenName = "FIXED";
 
 var accounts;
 var account;
@@ -79,7 +79,7 @@ window.App = {
     var exchangeInstance;
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
-      return exchangeInstance.getTokenBalance.call(tokenName, {from: account});
+      return exchangeInstance.getBalance.call(tokenName, {from: account});
     }).then(function(balance) {
       var token_balance = document.getElementById("balanceTokenInExchange");
       token_balance.innerHTML = balance.toNumber();
@@ -153,7 +153,7 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
 
-      exchangeInstance.tokenCreated({}, {fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.TokenAddedToSystem({}, {fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -190,7 +190,7 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
 
-      exchangeInstance.tokenDeposited({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.DepositForTokenReceived({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -215,7 +215,7 @@ window.App = {
         document.getElementById("depositEvents").appendChild(alertbox);
       })
 
-      exchangeInstance.etherDeposit({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.DepositForEthReceived({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -249,7 +249,7 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
 
-      exchangeInstance.tokenWithdraw({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.WithdrawalToken({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -274,7 +274,7 @@ window.App = {
         document.getElementById("withdrawEvents").appendChild(alertbox);
       })
 
-      exchangeInstance.etherWithraw({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.WithdrawalEth({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -308,7 +308,7 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
 
-      exchangeInstance.buyOfferCreated({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.LimitBuyOrderCreated({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -333,7 +333,7 @@ window.App = {
         document.getElementById("buyEvents").appendChild(alertbox);
       })
 
-      exchangeInstance.buyOrderFulfilled({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.BuyOrderFulfilled({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -366,7 +366,7 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       exchangeInstance = instance;
 
-      exchangeInstance.sellOfferCreated({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.LimitSellOrderCreated({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;
@@ -391,7 +391,7 @@ window.App = {
         document.getElementById("sellEvents").appendChild(alertbox);
       })
 
-      exchangeInstance.sellOrderFulfilled({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
+      exchangeInstance.SellOrderFulfilled({},{fromBlock:0, toBlock:'latest'}).watch(function(error, result) {
         if (error != null) {
           alert("There was an error obtaining events");
           return;

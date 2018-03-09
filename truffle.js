@@ -1,20 +1,19 @@
 // Allows us to use ES6 in our migrations and tests.
-require('babel-register')
+require("babel-register");
 
 module.exports = {
   networks: {
     development: {
-      host: 'localhost',
+      host: "localhost",
       port: 8545,
-      network_id: '*' // Match any network id
+      network_id: "*" // Match any network id
     },
     rinkeby: {
-      host: 'localhost',
+      host: "localhost",
       port: 8545,
-      network_id: '4', // Rinkeby network id
-      from: "0xbfe1600fc882366016691704879a00eb7284929d",
-      gas: 4600000
+      network_id: "4", // Rinkeby network id
+      from: "0x59ec72026e0259bb726940ef7ee29290fb4cc166",
+      gas: 860000
     }
   }
-
-}
+};
