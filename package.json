@@ -44,6 +44,7 @@
     "resolve-url-loader": "^2.1.1",
     "sass-loader": "^6.0.6",
     "scss": "^0.2.4",
+    "truffle-hdwallet-provider": "^0.0.3",
     "url-loader": "^0.6.2",
     "woff2": "0.0.1"
   }
