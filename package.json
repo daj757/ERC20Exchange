@@ -7,7 +7,7 @@
     "build": "webpack",
     "dev": "webpack-dev-server"
   },
-  "author": "Douglas von Kohorn",
+  "author": "Danny Jimenez",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.22.2",
